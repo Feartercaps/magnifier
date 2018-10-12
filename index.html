@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .parblock{
+            width: 300px;
+            height: 500px;
+            margin: 0 auto;
+        }
+        .block{
+            position: relative;
+            width: 300px;
+            height: 400px;
+            border: 1px solid black;
+            cursor: move;
+        }
+        .imagelist{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .title{
+            display: block;
+            position: absolute;
+            width: 100%;
+            background-color: rgba(128, 128, 128, 0.62);
+            line-height: 30px;
+            text-align: center;
+            color: white;
+        }
+        .smallImage{
+            position: relative;
+            width: 300px;
+            height: 100px;
+            border: 1px solid silver;
+            margin-top: 10px;
+        }
+        .smallerlist{
+            width: 50px;
+            height: 70px;
+            margin-left: 33px;
+            border: 1px solid silver;
+            margin-top: 15px;
+        }
+        .smallerimage{
+            border: 1px solid red;
+        }
+        .bigdiv{
+            width: 300px;
+            height: 400px;
+            border: 1px solid black;
+            position: absolute;
+            left: 300px;
+            background-repeat: no-repeat;
+        }
+        .smalldiv{
+            width: 90px;
+            height: 110px;
+            border: 1px solid grey;
+            position: absolute;
+            z-index: 5;
+            background-color: rgba(192, 192, 192, 0.35);
+        }
+    </style>
+</head>
+<body>
+<div class="parblock">
+    <div class="block">
+        <img class="imagelist" src="./images/smallimage.jpg" alt=""/>
+        <span class="title">The Girl is Beautiys</span>
+    </div>
+    <div class="smallImage">
+        <img class="smallerlist smallerimage" src="./images/tinyimage.jpg" alt=""/>
+        <img class="smallerlist" src="./images/tinyimage-1.jpg" alt=""/>
+        <img class="smallerlist" src="./images/tinyimage-2.jpg" alt=""/>
+    </div>
+</div>
+<script>
+    var Data=[
+        {"Bigsrc":"bigimage00.jpg","smallsrc":"smallimage.jpg","smallersrc":"tinyimage.jpg","title":"The Girl is Beautiys  wowo"},
+        {"Bigsrc":"bigimage01.jpg","smallsrc":"smallimage-1.jpg","smallersrc":"tinyimage-1.jpg","title":"The Girl is Beautiys  haha"},
+        {"Bigsrc":"bigimage02.jpg","smallsrc":"smallimage-2.jpg","smallersrc":"tinyimage-2.jpg","title":"The Girl is Beautiys  susu"}
+    ];
+    var index=0;
+    window.onload=function (){
+
+        var block=document.getElementsByClassName("block")[0];
+        block.onmouseenter=function (){
+            createBigImage(this);
+            createsmallImage(this);
+        }
+        block.onmouseleave=function (){
+           document.getElementsByClassName("bigdiv")[0].remove();
+           document.getElementsByClassName("smalldiv")[0].remove();
+        }
+        block.onmousemove=function (e){
+            var small=document.getElementsByClassName("smalldiv")[0]
+            var x= e.pageX-(document.documentElement.clientWidth/2-150)-45;
+            var y= e.pageY-55;
+            if(x>=210){x=210;}
+            if(x<=0){x=0;}
+            if(y>=290){y=290;}
+            if(y<=0){y=0;}
+            small.style.left=x+"px";
+            small.style.top=y+"px";
+
+            //设置大图的相关属性
+            var big=document.getElementsByClassName("bigdiv")[0];
+            big.style.backgroundPosition=(-2.5*x)+"px "+(-2*y)+"px";
+
+        }
+        //点击小图切换
+        var smaller=document.getElementsByClassName("smallerlist");
+        for(var i=0;i<smaller.length;i++){
+              smaller[i].index=i;
+             smaller[i].onclick=function (){
+                 for(var i=0;i<smaller.length;i++){
+                     smaller[i].style.border="1px solid silver";
+                 }
+                 this.style.border="1px solid red";
+
+                 //修改图
+                 document.getElementsByClassName("imagelist")[0].src="images/"+Data[this.index].smallsrc;
+                 document.getElementsByClassName("title")[0].innerHTML=Data[this.index].title;
+                 index=this.index;
+               }
+        }
+        //创建small元素
+        function createsmallImage(block){
+            var div=document.createElement("div");
+            div.className="smalldiv";
+            block.appendChild(div);
+            div.onmouseleave =function (){
+                 this.remove();
+                 document.getElementsByClassName("bigdiv")[0].remove();
+            }
+        }
+        //创建big元素
+        function createBigImage(block){
+           var div=document.createElement("div");
+            div.className="bigdiv";
+            div.style.backgroundImage="url(images/"+Data[index].Bigsrc+")";
+            block.appendChild(div);
+        }
+    }
+</script>
+</body>
+</html>
